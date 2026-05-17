@@ -63,3 +63,27 @@ textarea {
 button {
   cursor: pointer;
 }
+
+.job-card {
+  border-left: 8px solid gray;
+  background: #fafafa;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+.applied {
+  border-left-color: #3498db;
+}
+
+.interview {
+  border-left-color: #f39c12;
+}
+
+.rejected {
+  border-left-color: #e74c3c;
+}
+
+.offer {
+  border-left-color: #2ecc71;
+}

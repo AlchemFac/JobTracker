@@ -36,7 +36,7 @@ function renderJobs() {
   jobs.forEach(function(job) {
     const jobCard = document.createElement("div");
 
-    jobCard.className = "job-card";
+    jobCard.className = `job-card ${job.status.toLowerCase()}`;
 
     jobCard.innerHTML = `
       <h3>${job.company}</h3>
