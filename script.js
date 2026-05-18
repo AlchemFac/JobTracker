@@ -2,13 +2,16 @@ console.log("script.js is connected");
 
 const form = document.getElementById("jobForm");
 const jobList = document.getElementById("jobList");
+const searchInput = document.getElementById("searchInput");
+const filterStatus = document.getElementById("filterStatus");
 
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+
 function saveJobs() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
 }
 
-form.addEventListener("submit", function(event) {
+  form.addEventListener("submit", function(event) {
   event.preventDefault();
 
   console.log("Form submitted");
@@ -23,17 +26,44 @@ form.addEventListener("submit", function(event) {
   };
 
   jobs.push(job);
+
   saveJobs();
+
   console.log(jobs);
 
   renderJobs();
+
   form.reset();
 });
 
+filterStatus.addEventListener("change", function() {
+  renderJobs();
+  });
+
 function renderJobs() {
   jobList.innerHTML = "";
+  
+  const selectedStatus = filterStatus.value;
+  const searchTerm = searchInput.value.toLowerCase();
 
-  jobs.forEach(function(job) {
+  const filteredJobs = jobs.filter(function(job) {
+
+    const matchesStatus =
+    selectedStatus === "All" ||
+    job.status === selectedStatus;
+
+    const matchesSearch =
+    job.company.toLowerCase().includes(searchTerm) ||
+    job.role.toLowerCase().includes(searchTerm);
+
+    return matchesStatus && matchesSearch;
+    });
+
+  searchInput.addEventListener("input", function() {
+  renderJobs();
+  });
+
+  filteredJobs.forEach(function(job) {
     const jobCard = document.createElement("div");
 
     jobCard.className = `job-card ${job.status.toLowerCase()}`;
