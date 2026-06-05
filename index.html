@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,6 +64,21 @@
       <option value="Rejected">Rejected</option>
       <option value="Offer">Offer</option>
     </select>
+
+    <section class="ai-section">
+  <h2>Analyze Job Description</h2>
+
+  <textarea
+    id="jobDescriptionInput"
+    placeholder="Paste job description here..."
+  ></textarea>
+
+  <button id="analyzeJobButton" type="button">
+    Analyze Job
+  </button>
+
+  <div id="aiAnalysisResult"></div>
+</section>
 
     <div id="jobList">
 

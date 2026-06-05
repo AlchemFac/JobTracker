@@ -4,6 +4,9 @@ const form = document.getElementById("jobForm");
 const jobList = document.getElementById("jobList");
 const searchInput = document.getElementById("searchInput");
 const filterStatus = document.getElementById("filterStatus");
+const jobDescriptionInput = document.getElementById("jobDescriptionInput");
+const analyzeJobButton = document.getElementById("analyzeJobButton");
+const aiAnalysisResult = document.getElementById("aiAnalysisResult");
 
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
@@ -62,6 +65,42 @@ function renderJobs() {
   searchInput.addEventListener("input", function() {
   renderJobs();
   });
+
+  analyzeJobButton.addEventListener("click", async function() {
+  const jobDescription = jobDescriptionInput.value;
+
+  if (!jobDescription.trim()) {
+    aiAnalysisResult.innerText = "Paste a job description first.";
+    return;
+  }
+
+  aiAnalysisResult.innerText = "Analyzing...";
+
+  try {
+    const response = await fetch("/analyze-job", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        jobDescription: jobDescription
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      aiAnalysisResult.innerText = data.error || "Something went wrong.";
+      return;
+    }
+
+    aiAnalysisResult.innerText = data.analysis;
+
+  } catch (error) {
+    console.error(error);
+    aiAnalysisResult.innerText = "Could not connect to the server.";
+  }
+});
 
   filteredJobs.forEach(function(job) {
     const jobCard = document.createElement("div");
