@@ -7,6 +7,7 @@ const filterStatus = document.getElementById("filterStatus");
 const jobDescriptionInput = document.getElementById("jobDescriptionInput");
 const analyzeJobButton = document.getElementById("analyzeJobButton");
 const aiAnalysisResult = document.getElementById("aiAnalysisResult");
+const clearAnalysisButton = document.getElementById("clearAnalysisButton");
 
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
@@ -14,7 +15,7 @@ function saveJobs() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
 }
 
-  form.addEventListener("submit", function(event) {
+form.addEventListener("submit", function(event) {
   event.preventDefault();
 
   console.log("Form submitted");
@@ -29,44 +30,23 @@ function saveJobs() {
   };
 
   jobs.push(job);
-
   saveJobs();
 
   console.log(jobs);
 
   renderJobs();
-
   form.reset();
 });
 
 filterStatus.addEventListener("change", function() {
   renderJobs();
-  });
+});
 
-function renderJobs() {
-  jobList.innerHTML = "";
-  
-  const selectedStatus = filterStatus.value;
-  const searchTerm = searchInput.value.toLowerCase();
-
-  const filteredJobs = jobs.filter(function(job) {
-
-    const matchesStatus =
-    selectedStatus === "All" ||
-    job.status === selectedStatus;
-
-    const matchesSearch =
-    job.company.toLowerCase().includes(searchTerm) ||
-    job.role.toLowerCase().includes(searchTerm);
-
-    return matchesStatus && matchesSearch;
-    });
-
-  searchInput.addEventListener("input", function() {
+searchInput.addEventListener("input", function() {
   renderJobs();
-  });
+});
 
-  analyzeJobButton.addEventListener("click", async function() {
+analyzeJobButton.addEventListener("click", async function() {
   const jobDescription = jobDescriptionInput.value;
 
   if (!jobDescription.trim()) {
@@ -102,6 +82,29 @@ function renderJobs() {
   }
 });
 
+clearAnalysisButton.addEventListener("click", function() {
+  jobDescriptionInput.value = "";
+  aiAnalysisResult.innerText = "";
+});
+
+function renderJobs() {
+  jobList.innerHTML = "";
+
+  const selectedStatus = filterStatus.value;
+  const searchTerm = searchInput.value.toLowerCase();
+
+  const filteredJobs = jobs.filter(function(job) {
+    const matchesStatus =
+      selectedStatus === "All" ||
+      job.status === selectedStatus;
+
+    const matchesSearch =
+      job.company.toLowerCase().includes(searchTerm) ||
+      job.role.toLowerCase().includes(searchTerm);
+
+    return matchesStatus && matchesSearch;
+  });
+
   filteredJobs.forEach(function(job) {
     const jobCard = document.createElement("div");
 
@@ -115,15 +118,15 @@ function renderJobs() {
       <p><strong>Notes:</strong> ${job.notes}</p>
 
       <button onclick="deleteJob(${job.id})">
-  Delete
-</button>
+        Delete
+      </button>
     `;
 
     jobList.appendChild(jobCard);
   });
 }
 
- function deleteJob(id) {
+function deleteJob(id) {
   jobs = jobs.filter(function(job) {
     return job.id !== id;
   });
