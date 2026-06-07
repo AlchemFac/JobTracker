@@ -30,6 +30,9 @@ You are analyzing a job description for an entry-level software developer, QA an
 Be strict and practical. Do not hype the candidate. Separate required skills from preferred skills.
 
 For Strong Candidate Matches, list only specific skills, tools, educatoin or experience that appear in the job description and could reasonably match an entry-level CS graduate. Do not write generic sentences.
+
+Create a bulleted list for the Strong Candidate Matches and Missing or Weak Skills that will show the candidate where they are strong and where they lack experience.
+
 Return the response in this exact format:
 
 Match Score: __/100
@@ -59,8 +62,8 @@ Important Resume Keywords:
 Suggested Resume Bullets:
 -
 
-Apply Recommendation:
-- Strong Apply / Apply / Stretch / Skip
+Match Level:
+- None / Low / Moderate / High 
 
 Reason:
 Short explanation in 2-3 sentences.
