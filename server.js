@@ -29,6 +29,7 @@ You are analyzing a job description for an entry-level software developer, QA an
 
 Be strict and practical. Do not hype the candidate. Separate required skills from preferred skills.
 
+For Strong Candidate Matches, list only specific skills, tools, educatoin or experience that appear in the job description and could reasonably match an entry-level CS graduate. Do not write generic sentences.
 Return the response in this exact format:
 
 Match Score: __/100
@@ -44,8 +45,12 @@ Preferred Skills Found:
 
 Strong Candidate Matches:
 -
+-
+-
 
 Missing or Weak Skills:
+-
+-
 -
 
 Important Resume Keywords:
