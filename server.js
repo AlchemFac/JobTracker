@@ -18,15 +18,13 @@ app.post("/analyze-job", async function(req, res) {
   try {
     const jobDescription = req.body.jobDescription;
 
-    if (!jobDescription) {
+    if (!jobDescription || !jobDescription.trim()) {
       return res.status(400).json({
         error: "Job description is required."
       });
     }
 
-    const response = await client.responses.create({
-      model: "gpt-5.5",
-      input: `
+const prompt = `
 Analyze this job description for a junior software developer or QA analyst candidate.
 
 Return the response in this exact format:
@@ -50,12 +48,28 @@ Short direct recommendation.
 
 Job Description:
 ${jobDescription}
-      `
-    });
+`;
 
-    res.json({
-      analysis: response.output_text
-    });
+const ollamaResponse = await fetch(
+  "http://localhost:11434/api/generate",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "llama3",
+      prompt: prompt,
+      stream: false
+    })
+  }
+);
+
+const data = await ollamaResponse.json();
+
+res.json({
+  analysis: data.response
+});
 
   } catch (error) {
     console.error(error);
