@@ -25,26 +25,47 @@ app.post("/analyze-job", async function(req, res) {
     }
 
 const prompt = `
-Analyze this job description for a junior software developer or QA analyst candidate.
+You are analyzing a job description for an entry-level software developer, QA analyst, or technical analyst candidate.
+
+Be strict and practical. Do not hype the candidate. Separate required skills from preferred skills.
 
 Return the response in this exact format:
 
 Match Score: __/100
 
-Strong Matches:
+Role Type:
+- Frontend / Backend / Full-Stack / QA / Analyst / Other
+
+Required Skills Found:
+-
+
+Preferred Skills Found:
+-
+
+Strong Candidate Matches:
 -
 
 Missing or Weak Skills:
 -
 
-Important Keywords:
+Important Resume Keywords:
 -
 
-Resume Bullet Suggestions:
+Suggested Resume Bullets:
 -
 
-Recommendation:
-Short direct recommendation.
+Apply Recommendation:
+- Strong Apply / Apply / Stretch / Skip
+
+Reason:
+Short explanation in 2-3 sentences.
+
+Rules:
+- If a skill is only listed as preferred, do not treat it as required.
+- If the job description mentions a skill, do not say it is missing.
+- Be specific.
+- Do not invent experience.
+- Keep the analysis concise.
 
 Job Description:
 ${jobDescription}
