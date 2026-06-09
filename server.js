@@ -74,6 +74,57 @@ Job Description:
 ${jobDescription}
 `;
 
+const aiProvider = process.env.AI_PROVIDER || "mock";
+
+if (aiProvider === "mock") {
+  return res.json({
+    analysis: `
+Match Score: 70/100
+
+Role Type:
+- Demo Analysis
+
+Required Skills Found:
+- JavaScript
+- Git
+- Basic frontend development
+
+Preferred Skills Found:
+- Node.js
+- Express
+- SQL
+
+Strong Candidate Matches:
+- Built JavaScript projects
+- Used Git and GitHub
+- Created CRUD applications
+
+Missing or Weak Skills:
+- Production database experience
+- Cloud deployment experience
+- Team software development experience
+
+Important Resume Keywords:
+- JavaScript
+- Node.js
+- Express
+- CRUD
+- REST API
+- Git
+
+Suggested Resume Bullets:
+- Built a full-stack job tracker using JavaScript, Node.js, and Express.
+- Implemented CRUD functionality, search, filtering, and AI analysis architecture.
+
+Match Level:
+- Moderate
+
+Reason:
+This is a mock analysis used when Ollama is disabled.
+`
+  });
+}
+
 const ollamaResponse = await fetch(
   "http://localhost:11434/api/generate",
   {
