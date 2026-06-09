@@ -8,8 +8,10 @@ const jobDescriptionInput = document.getElementById("jobDescriptionInput");
 const analyzeJobButton = document.getElementById("analyzeJobButton");
 const aiAnalysisResult = document.getElementById("aiAnalysisResult");
 const clearAnalysisButton = document.getElementById("clearAnalysisButton");
+const submitButton = document.getElementById("submitButton");
 
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+let editingJobId = null;
 
 function saveJobs() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
@@ -29,13 +31,27 @@ form.addEventListener("submit", function(event) {
     notes: document.getElementById("notes").value
   };
 
+if (editingJobId === null) {
   jobs.push(job);
-  saveJobs();
+} else {
+  jobs = jobs.map(function(existingJob) {
+    if (existingJob.id === editingJobId) {
+      return {
+        ...job,
+        id: editingJobId
+      };
+    }
 
-  console.log(jobs);
+    return existingJob;
+  });
 
-  renderJobs();
-  form.reset();
+  editingJobId = null;
+  submitButton.innerText = "Add Job";
+}
+
+saveJobs();
+renderJobs();
+form.reset();
 });
 
 filterStatus.addEventListener("change", function() {
@@ -120,6 +136,10 @@ function renderJobs() {
       <button onclick="deleteJob(${job.id})">
         Delete
       </button>
+
+      <button onclick="editJob(${job.id})">
+      Edit
+      </button>
     `;
 
     jobList.appendChild(jobCard);
@@ -133,6 +153,29 @@ function deleteJob(id) {
 
   saveJobs();
   renderJobs();
+}
+
+function editJob(id) {
+  const jobToEdit = jobs.find(function(job) {
+    return job.id === id;
+  });
+
+  if (!jobToEdit) {
+    return;
+  }
+
+  document.getElementById("company").value = jobToEdit.company;
+  document.getElementById("role").value = jobToEdit.role;
+  document.getElementById("dateApplied").value = jobToEdit.dateApplied;
+  document.getElementById("status").value = jobToEdit.status;
+  document.getElementById("notes").value = jobToEdit.notes;
+
+  editingJobId = id;
+  submitButton.innerText = "Update Job";
+
+  form.scrollIntoView({
+  behavior: "smooth"
+  });
 }
 
 renderJobs();
