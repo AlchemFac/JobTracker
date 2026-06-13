@@ -9,9 +9,11 @@ const analyzeJobButton = document.getElementById("analyzeJobButton");
 const aiAnalysisResult = document.getElementById("aiAnalysisResult");
 const clearAnalysisButton = document.getElementById("clearAnalysisButton");
 const submitButton = document.getElementById("submitButton");
+const saveAnalysisButton = document.getElementById("saveAnalysisButton");
 
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 let editingJobId = null;
+let latestAnalysis = "";
 
 function saveJobs() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
@@ -37,6 +39,7 @@ if (editingJobId === null) {
   jobs = jobs.map(function(existingJob) {
     if (existingJob.id === editingJobId) {
       return {
+        ...existingJob,
         ...job,
         id: editingJobId
       };
@@ -90,12 +93,40 @@ analyzeJobButton.addEventListener("click", async function() {
       return;
     }
 
+    latestAnalysis = data.analysis;
     aiAnalysisResult.innerText = data.analysis;
 
   } catch (error) {
     console.error(error);
     aiAnalysisResult.innerText = "Could not connect to the server.";
   }
+});
+
+saveAnalysisButton.addEventListener("click", function() {
+  if (!latestAnalysis) {
+    aiAnalysisResult.innerText = "Analyze a job description before saving.";
+    return;
+  }
+
+  if (editingJobId === null) {
+    aiAnalysisResult.innerText = "Click Edit on a job first, then save the analysis.";
+    return;
+  }
+
+  jobs = jobs.map(function(job) {
+    if (job.id === editingJobId) {
+      return {
+        ...job,
+        analysis: latestAnalysis
+      };
+    }
+    return job;
+  });
+
+  saveJobs();
+  renderJobs();
+
+  aiAnalysisResult.innerText = "Analysis saved to job.";
 });
 
 clearAnalysisButton.addEventListener("click", function() {
@@ -132,6 +163,11 @@ function renderJobs() {
       <p><strong>Date Applied:</strong> ${job.dateApplied}</p>
       <p><strong>Status:</strong> ${job.status}</p>
       <p><strong>Notes:</strong> ${job.notes}</p>
+
+      ${job.analysis ? `
+        <p><strong>Saved Analysis:</strong></p>
+        <pre>${job.analysis}</pre>
+      ` : ""}
 
       <button onclick="deleteJob(${job.id})">
         Delete
