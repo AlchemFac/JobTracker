@@ -10,6 +10,11 @@ const aiAnalysisResult = document.getElementById("aiAnalysisResult");
 const clearAnalysisButton = document.getElementById("clearAnalysisButton");
 const submitButton = document.getElementById("submitButton");
 const saveAnalysisButton = document.getElementById("saveAnalysisButton");
+const totalJobs = document.getElementById("totalJobs");
+const appliedJobs = document.getElementById("appliedJobs");
+const interviewJobs = document.getElementById("interviewJobs");
+const rejectedJobs = document.getElementById("rejectedJobs");
+const offerJobs = document.getElementById("offerJobs");
 
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 let editingJobId = null;
@@ -134,7 +139,29 @@ clearAnalysisButton.addEventListener("click", function() {
   aiAnalysisResult.innerText = "";
 });
 
+function updateStats() {
+  totalJobs.innerText = jobs.length;
+
+  appliedJobs.innerText = jobs.filter(function(job) {
+    return job.status === "Applied";
+  }).length;
+
+  interviewJobs.innerText = jobs.filter(function(job) {
+    return job.status === "Interview";
+  }).length;
+
+  rejectedJobs.innerText = jobs.filter(function(job) {
+    return job.status === "Rejected";
+  }).length;
+
+  offerJobs.innerText = jobs.filter(function(job) {
+    return job.status === "Offer";
+  }).length;
+
+}
+
 function renderJobs() {
+  updateStats();
   jobList.innerHTML = "";
 
   const selectedStatus = filterStatus.value;
