@@ -15,6 +15,11 @@ const appliedJobs = document.getElementById("appliedJobs");
 const interviewJobs = document.getElementById("interviewJobs");
 const rejectedJobs = document.getElementById("rejectedJobs");
 const offerJobs = document.getElementById("offerJobs");
+const resumeInput = document.getElementById("resumeInput");
+const resumeJobDescriptionInput = document.getElementById("resumeJobDescriptionInput");
+const compareResumeButton = document.getElementById("compareResumeButton");
+const clearResumeCompareButton = document.getElementById("clearResumeCompareButton");
+const resumeCompareResult = document.getElementById("resumeCompareResult");
 
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 let editingJobId = null;
@@ -68,6 +73,50 @@ filterStatus.addEventListener("change", function() {
 
 searchInput.addEventListener("input", function() {
   renderJobs();
+});
+
+compareResumeButton.addEventListener("click", async function() {
+  const resumeText = resumeInput.value;
+  const jobDescription = resumeJobDescriptionInput.value;
+
+  if (!resumeText.trim() || !jobDescription.trim()) {
+    resumeCompareResult.innerText = "Paste both a resume and job description first.";
+    return;
+  }
+
+  resumeCompareResult.innerText = "Comparing resume...";
+
+  try {
+    const response = await fetch("/compare-resume", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        resumeText: resumeText,
+        jobDescription: jobDescription
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      resumeCompareResult.innerText = data.error || "Something went wrong.";
+      return;
+    }
+
+    resumeCompareResult.innerText = data.analysis;
+
+  } catch (error) {
+    console.error(error);
+    resumeCompareResult.innerText = "Could not connect to the server.";
+  }
+});
+
+clearResumeCompareButton.addEventListener("click", function() {
+  resumeInput.value = "";
+  resumeJobDescriptionInput.value = "";
+  resumeCompareResult.innerText = "";
 });
 
 analyzeJobButton.addEventListener("click", async function() {
