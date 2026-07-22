@@ -4,7 +4,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 app.use(express.json());
 app.use(express.static("."));
@@ -417,6 +421,6 @@ This is a mock resume comparison used when AI_PROVIDER is set to mock. Use AI_PR
   }
 });
 
-app.listen(PORT, function() {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
