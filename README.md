@@ -1,4 +1,4 @@
-# JobTracker
+# CareerTracker
 
 A full-stack job search management application built with HTML, CSS, JavaScript, Node.js, and Express. The application helps users organize and track job applications while providing the foundation for AI-assisted job analysis.
 
